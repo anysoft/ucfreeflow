@@ -254,3 +254,11 @@ proxy/http/client_test.go
 
 应对这两种方式实现免流基本只要抓取header模式或者实现代理认证即可，一般用其他自建代理服务器中转(v2ray/ssr)会比较简单，且基本不会跳点。
 如果需要直连则需要实现对应的认证算法添加到header中，且容易跳点。避免跳点则需要本地搭建VPN或者iptables nat转发数据到本地自建socks代理(收集本机所有流量)，同时对udp/DNS等数据包转为socks包后禁用或者让其他公共代理转发数据。
+
+
+
+# 参考来源
+https://guide.v2fly.org/en_US/basics/http.html#configuration
+https://www.v2fly.org/config/protocols/http.html#outboundconfigurationobject
+https://guide.v2fly.org/app/transparent_proxy.html#设置步骤
+https://blog.xiazhiri.com/china-telecom-ali-free-flow.html
