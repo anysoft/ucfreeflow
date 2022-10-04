@@ -12,6 +12,14 @@ hook到的数据存放在`/sdcard/UCDownloads/freeflow.ini`
 ps：上述方案其实可以简单手动完成，4G/5G网络下使用httpcanary 对 UC浏览器抓包，UC访问 v2ray/ssr的域名，在请求信息中就可以看到`Proxy-Authorization`了。
 此处主要目的还是为了抓取`uid`、`token` 后自行修改编译v2ray源码达到UC浏览器一样的直连代理效果。
 
+## 食用方式
+### 方案一
+借用http伪装达到http header自定义效果
+[代理使用方式](https://github.com/Qv2ray/Qv2ray/issues/483#issuecomment-608985659) (该方式同样适用于王卡，header伪装就行)
+
+### 方案二
+修改源码，让v2ray的http认证方式添加method字段，实现uc/王卡 `Proxy-Authorization` 计算和header添加
+
 v2ray修改部分go源码如下：
 
 ``` golang
@@ -180,4 +188,3 @@ proxy/http/client_test.go
 ```
 
 
-[代理使用方式](https://github.com/Qv2ray/Qv2ray/issues/483#issuecomment-608985659) (该方式同样适用于王卡，header伪装就行)
