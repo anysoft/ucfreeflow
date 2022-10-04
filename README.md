@@ -14,11 +14,35 @@ ps：上述方案其实可以简单手动完成，4G/5G网络下使用httpcanary
 
 ## 食用方式
 ### 方案一
-借用http伪装达到http header自定义效果
+v2ray/ssr中转，借用http伪装达到http header自定义`Proxy-Authorization`效果
+(UC直连则需要根据`uid`、`token`动态生成`Proxy-Authorization`/王卡直连要动态获取quid/guid)
+
 [代理使用方式](https://github.com/Qv2ray/Qv2ray/issues/483#issuecomment-608985659) (该方式同样适用于王卡，header伪装就行)
 
 ### 方案二
-修改源码，让v2ray的http认证方式添加method字段，实现uc/王卡 `Proxy-Authorization` 计算和header添加
+修改源码，让v2ray的http认证方式添加method字段，实现uc/王卡 `Proxy-Authorization` 计算和header添加。
+
+此部分是在v2ray的http代理基础上增加一个`AuthMethod`字段，默认http代理认证方式是`basic auth`，此处增加了`uc`和`qq`两种认证方式，
+uc下支持三种数据：
+- Username: 1|uid|com.UCMobile|xxxxxxxx   // `Proxy-Authorization` 固化的ssr/v2ray 服务器主机域名/ip计算的认证信息，用作中转认证。
+
+- Username: Basic Auth xxxx              // 阿里宝卡/蚂蚁卡 认证方式(联通UC免流可以直接用V2ray或者ssr的前置代理功能，base58解码获得username和password填入即可)
+ - `Authorization: Basic dWMxMC4xNzcuMTQ1LjE0MzoxZjQ3ZDNlZjUzYjAzNTQ0MzQ1MWM3ZWU3ODczZmYzOA==` 解码 base58.decode(dWMxMC4xNzcuMTQ1LjE0MzoxZjQ3ZDNlZjUzYjAzNTQ0MzQ1MWM3ZWU3ODczZmYzOA==)=uc10.177.145.143:1f47d3ef53b035443451c7ee7873ff38
+ - Username=uc10.177.145.143
+ - Password=1f47d3ef53b035443451c7ee7873ff38
+ - 在线base64解码 https://base64.us/
+
+- 直连动态计算域名对应`Proxy-Authorization`
+ - Username: uid
+ - Password: token 
+
+
+- 腾讯王卡
+ - Username: Q-GUID
+ - Password: Q-Token 
+
+- 百度歪卡
+ - 此处未实现，添加header即可，可以用openvpn自定义header或者修改源码让v2ray http代理支持之定义header即可。
 
 v2ray修改部分go源码如下：
 
@@ -219,4 +243,14 @@ proxy/http/client_test.go
 ```
 
 
+# 总结
+最后总结下，目前免流方式基本就是两大类：
+1. 代理服务器认证代理转发
+ - basic auth认证(阿里联通系)
+ - header认证(百度系/腾讯系)
+ - basic 自定义认证算法(UC鱼卡)
+ 
+2. header 模式认证 
 
+应对这两种方式实现免流基本只要抓取header模式或者实现代理认证即可，一般用其他自建代理服务器中转(v2ray/ssr)会比较简单，且基本不会跳点。
+如果需要直连则需要实现对应的认证算法添加到header中，且容易跳点。避免跳点则需要本地搭建VPN或者iptables nat转发数据到本地自建socks代理(收集本机所有流量)，同时对udp/DNS等数据包转为socks包后禁用或者让其他公共代理转发数据。
