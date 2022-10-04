@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">UC免流助手</string>
+    <string name="token_updated_notce">UC浏览器动态免流Token更新，请注意调整脚本。</string>
+    <string name="action_settings">设置</string>
+</resources>
