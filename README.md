@@ -14,10 +14,10 @@ ps：上述方案其实可以简单手动完成，4G/5G网络下使用httpcanary
 
 ## 食用方式
 ### 方案一
-v2ray/ssr中转，借用http伪装达到http header自定义`Proxy-Authorization`效果
+v2ray/ssr/openvpn 中转，借用http伪装达到http header自定义`Proxy-Authorization`效果
 (UC直连则需要根据`uid`、`token`动态生成`Proxy-Authorization`/王卡直连要动态获取quid/guid)
 
-[代理使用方式](https://github.com/Qv2ray/Qv2ray/issues/483#issuecomment-608985659) (该方式同样适用于王卡，header伪装就行)
+[代理使用方式](https://github.com/Qv2ray/Qv2ray/issues/483#issuecomment-608985659) (该方式同样适用于腾讯系王卡/百度系歪卡/阿里系宝卡，header伪装就行)
 
 ### 方案二
 修改源码，让v2ray的http认证方式添加method字段，实现uc/王卡 `Proxy-Authorization` 计算和header添加。
