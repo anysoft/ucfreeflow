@@ -188,3 +188,35 @@ proxy/http/client_test.go
 ```
 
 
+对应配置参考：https://guide.v2fly.org/en_US/basics/http.html#client-side-configuration
+``` JSON
+{
+        "protocol": "http",
+        "settings": {
+          "servers": [
+            {
+              "address": "192.168.108.1",// Server IP
+              "port": 1024,// Server port
+              "users": [
+                {
+                  "Username": "my-username",// Edit my-username to your username.
+                  "Password": "my-password" // Edit my-password to your password.
+                  "AuthMethod": "basic" //default is basic auth (basic/uc/qq) 
+                }
+              ] 
+            }
+          ]
+        },
+        "streamSettings": {
+          "security": "none", // If it is an HTTPS proxy, you need to edit none to tls
+          "tlsSettings": {
+            "allowInsecure": false
+            // Check the validity of the certificate
+        }
+      }
+    }
+
+```
+
+
+
